@@ -155,9 +155,10 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
         headerView.onAccountHeaderListener = { _, profile, _ ->
             val account = (profile as ProfileDrawerItem).tag as Account
             openedAccountUuid = account.uuid
-            parent.openRealAccount(account)
+            val eventHandled = !parent.openRealAccount(account)
             updateUserAccountsAndFolders(account)
-            true
+
+            eventHandled
         }
     }
 
@@ -174,7 +175,7 @@ class K9Drawer(private val parent: MessageList, savedInstanceState: Bundle?) : K
 
             val accountItem = ProfileDrawerItem().apply {
                 isNameShown = true
-                nameText = account.description
+                nameText = account.description ?: ""
                 descriptionText = account.email
                 identifier = drawerId
                 tag = account

@@ -22,6 +22,9 @@ Teile \u00a9 2006-<xliff:g>%s</xliff:g> Android Open Source Project.</string>
   <string name="changelog_title">Changelog</string>
   <string name="changelog_loading_error">Changelog konnte nicht geladen werden.</string>
   <string name="changelog_version_title">Version %s</string>
+  <string name="changelog_recent_changes_title">Was gibt es Neues</string>
+  <string name="changelog_show_recent_changes">Zeige die neuesten Änderungen nach einem App-Update</string>
+  <string name="changelog_snackbar_text">Finde heraus, was es Neues in diesem Release gibt</string>
   <!--Welcome message-->
   <string name="welcome_message_title">Willkommen bei K-9 Mail</string>
   <string name="accounts_welcome"><![CDATA[
@@ -99,7 +102,7 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="spam_action">Spam</string>
   <string name="forward_action">Weiterleiten</string>
   <string name="forward_as_attachment_action">Als Anhang weiterleiten</string>
-  <string name="edit_as_new_message_action">Editiere als neue Meldung</string>
+  <string name="edit_as_new_message_action">Als neue Nachricht bearbeiten</string>
   <string name="move_action">Verschieben</string>
   <string name="move_to_drafts_action">Zu Entwürfen verschieben</string>
   <string name="single_message_options_action">Senden…</string>
@@ -114,7 +117,7 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="add_account_action">Konto hinzufügen</string>
   <string name="compose_action">Verfassen</string>
   <string name="search_action">Suchen</string>
-  <string name="search_everywhere_action">Suche überall</string>
+  <string name="search_everywhere_action">Überall suchen</string>
   <string name="search_results">Suchergebnisse</string>
   <string name="preferences_action">Einstellungen</string>
   <string name="folders_action">Ordner verwalten</string>
@@ -382,7 +385,6 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="account_setup_options_enable_push_label">Push-Mail für dieses Konto aktivieren</string>
   <string name="account_setup_options_enable_push_summary">Neue Nachrichten werden nach dem Eintreffen umgehend abgerufen, falls Ihr Server dies unterstützt. Diese Einstellung kann die Akkulaufzeit des Gerätes stark beeinflussen.</string>
   <string name="idle_refresh_period_label">Push-Verbindung erneuern</string>
-  <string name="idle_refresh_period_1min">Jede Minute</string>
   <string name="idle_refresh_period_2min">Alle 2 Minuten</string>
   <string name="idle_refresh_period_3min">Alle 3 Minuten</string>
   <string name="idle_refresh_period_6min">Alle 6 Minuten</string>
@@ -436,8 +438,9 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="account_settings_mark_message_as_read_on_view_summary">Nachricht als gelesen markieren, sobald sie zum Betrachten geöffnet wird</string>
   <string name="account_settings_mark_message_as_read_on_delete_label">Beim Löschen als gelesen markieren</string>
   <string name="account_settings_mark_message_as_read_on_delete_summary">Nachricht als gelesen markieren, sobald sie gelöscht wird</string>
-  <string name="account_settings_notification_open_system_notifications_label">Benachrichtigungseinstellungen</string>
-  <string name="account_settings_notification_open_system_notifications_summary">Benachrichtigungseinstellungen öffnen</string>
+  <string name="account_settings_notification_channels_label">Benachrichtigungskategorien</string>
+  <string name="account_settings_open_notification_settings_messages_summary">Konfiguriere die Benachrichtigungen für neue Nachrichten</string>
+  <string name="account_settings_open_notification_settings_miscellaneous_summary">Konfiguriere Fehler- und Statusbenachrichtigungen</string>
   <string name="account_settings_show_pictures_label">Bilder automatisch herunterladen</string>
   <string name="account_settings_show_pictures_never">Niemals</string>
   <string name="account_settings_show_pictures_only_from_contacts">Nur von Kontakten</string>
@@ -544,7 +547,7 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="folder_settings_folder_display_mode_normal">Keine Klasse</string>
   <string name="folder_settings_folder_display_mode_first_class">Hauptordner</string>
   <string name="folder_settings_folder_display_mode_second_class">Nebenordner</string>
-  <string name="folder_settings_folder_sync_mode_label">Synchronisationsklasse</string>
+  <string name="folder_settings_folder_sync_mode_label">Abfrageklasse</string>
   <string name="folder_settings_folder_sync_mode_normal">Keine</string>
   <string name="folder_settings_folder_sync_mode_first_class">Hauptordner</string>
   <string name="folder_settings_folder_sync_mode_second_class">Nebenordner</string>
@@ -553,7 +556,7 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
   <string name="folder_settings_folder_push_mode_normal">Keine Klasse</string>
   <string name="folder_settings_folder_push_mode_first_class">Hauptordner</string>
   <string name="folder_settings_folder_push_mode_second_class">Nebenordner</string>
-  <string name="folder_settings_folder_push_mode_inherited">Wie Synchronisationsklasse</string>
+  <string name="folder_settings_folder_push_mode_inherited">Wie Abfrageklasse</string>
   <string name="folder_settings_folder_notify_mode_label">Benachrichtigungsklasse</string>
   <string name="folder_settings_folder_notify_mode_normal">Keine Klasse</string>
   <string name="folder_settings_folder_notify_mode_first_class">Hauptordner</string>
@@ -801,7 +804,7 @@ Bitte senden Sie Fehlerberichte, Ideen für neue Funktionen und stellen Sie Frag
     <item quantity="other">Um das Konto \"<xliff:g id="account">%s</xliff:g>\" nutzen zu können, müssen Sie die Serverpasswörter eingeben.</item>
   </plurals>
   <string name="settings_import_incoming_server_password_hint">Passwort des Posteingangsservers</string>
-  <string name="settings_import_outgoing_server_password_hint">Passwort des Posteingangsservers</string>
+  <string name="settings_import_outgoing_server_password_hint">Passwort des Postausgangsservers</string>
   <string name="settings_import_use_same_password_for_outgoing_server">Gleiches Passwort für den Postausgangsserver verwenden</string>
   <string name="server_name_format">Servername: <xliff:g id="hostname">%s</xliff:g></string>
   <string name="unread_widget_select_account">Anzahl ungelesener Nachrichten anzeigen für…</string>
@@ -1050,7 +1053,15 @@ Sie können diese Nachricht aufheben und sie als Backup für Ihren geheimen Schl
   <string name="permission_contacts_rationale_message">Damit die App Kontakte vorschlagen sowie Namen und Fotos der Kontakte anzeigen kann, benötigt sie Zugriff auf Ihre Kontakte.</string>
   <string name="generic_loading_error">Beim Laden der Daten ist ein Fehler aufgetreten</string>
   <string name="push_notification_state_initializing">Initialisieren...</string>
-  <string name="push_notification_state_listening">Neue E-Mails abfragen</string>
+  <string name="push_notification_state_listening">Warte auf neue E-Mails</string>
   <string name="push_notification_state_wait_background_sync">Wartet, bis die Hintergrundsynchronisation erlaubt ist</string>
   <string name="push_notification_state_wait_network">Wartet, bis ein Netzwerk verfügbar ist</string>
+  <string name="push_notification_info">Antippen, um mehr zu erfahren.</string>
+  <string name="push_info_title">Push-Information</string>
+  <string name="push_info_notification_explanation_text">Bei der Verwendung von Push hält K-9 Mail eine Verbindung zum E-Mail-Server aufrecht. Bei Android muss eine laufende Benachrichtigung angezeigt werden, während die App im Hintergrund aktiv ist. %s</string>
+  <string name="push_info_configure_notification_text">Allerdings erlaubt Android auch, dass die Benachrichtigung ausgeblendet wird.</string>
+  <string name="push_info_learn_more_text">Mehr erfahren</string>
+  <string name="push_info_configure_notification_action">Benachrichtigung einstellen</string>
+  <string name="push_info_disable_push_text">Wenn du keine sofortigen Benachrichtigungen über neue Nachrichten benötigst, solltest du Push deaktivieren und die Abfrage verwenden. Die Abfrage prüft in regelmäßigen Abständen auf neue Mails und benötigt die Benachrichtigung nicht.</string>
+  <string name="push_info_disable_push_action">Push deaktivieren</string>
 </resources>

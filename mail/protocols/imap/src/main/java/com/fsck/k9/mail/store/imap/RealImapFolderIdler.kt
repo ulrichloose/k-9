@@ -2,6 +2,7 @@ package com.fsck.k9.mail.store.imap
 
 import com.fsck.k9.mail.MessagingException
 import com.fsck.k9.mail.power.WakeLock
+import java.io.IOException
 import timber.log.Timber
 
 private const val SOCKET_EXTRA_TIMEOUT_MS = 2 * 60 * 1000L
@@ -59,7 +60,12 @@ internal class RealImapFolderIdler(
     private fun endIdle() {
         if (idleSent && !doneSent) {
             idleRefreshTimer?.cancel()
-            sendDone()
+
+            try {
+                sendDone()
+            } catch (e: IOException) {
+                Timber.v(e, "%s: IOException while sending DONE", logTag)
+            }
         }
     }
 
@@ -95,25 +101,18 @@ internal class RealImapFolderIdler(
 
             var response: ImapResponse
             do {
-                val expectSleeping = !connection.isDataAvailable() && !stopIdle
+                idleRefreshTimer = idleRefreshManager.startTimer(
+                    timeout = idleRefreshTimeoutProvider.idleRefreshTimeoutMs,
+                    callback = ::idleRefresh
+                )
 
-                idleRefreshTimer = if (expectSleeping) {
-                    idleRefreshManager.startTimer(idleRefreshTimeoutProvider.idleRefreshTimeoutMs) { idleRefresh() }
-                } else {
-                    null
-                }
-
-                if (expectSleeping) {
-                    wakeLock.release()
-                }
+                wakeLock.release()
 
                 try {
                     response = connection.readResponse()
                 } finally {
-                    if (expectSleeping) {
-                        wakeLock.acquire()
-                        idleRefreshTimer?.cancel()
-                    }
+                    wakeLock.acquire()
+                    idleRefreshTimer?.cancel()
                 }
 
                 if (response.isRelevant && !stopIdle) {
@@ -143,17 +142,24 @@ internal class RealImapFolderIdler(
             return
         }
 
-        sendDone()
+        try {
+            sendDone()
+        } catch (e: IOException) {
+            Timber.v(e, "%s: IOException while sending DONE", logTag)
+        }
     }
 
     @Synchronized
     private fun sendDone() {
         val folder = folder ?: return
         val connection = connectionProvider.getConnection(folder) ?: return
-        if (connection.isConnected) {
-            doneSent = true
-            connection.setSocketDefaultReadTimeout()
-            connection.sendContinuation("DONE")
+
+        synchronized(connection) {
+            if (connection.isConnected) {
+                doneSent = true
+                connection.setSocketDefaultReadTimeout()
+                connection.sendContinuation("DONE")
+            }
         }
     }
 

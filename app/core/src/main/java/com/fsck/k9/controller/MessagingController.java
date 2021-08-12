@@ -598,6 +598,8 @@ public class MessagingController {
     public void synchronizeMailboxBlocking(Account account, String folderServerId) throws MessagingException {
         long folderId = getFolderId(account, folderServerId);
 
+        account.setRingNotified(false);
+
         final CountDownLatch latch = new CountDownLatch(1);
         putBackground("synchronizeMailbox", null, () -> {
             try {
@@ -2773,6 +2775,11 @@ public class MessagingController {
             for (MessagingListener messagingListener : getListeners(listener)) {
                 messagingListener.synchronizeMailboxRemovedMessage(account, folderServerId, messageServerId);
             }
+
+            String accountUuid = account.getUuid();
+            long folderId = getFolderIdOrThrow(account, folderServerId);
+            MessageReference messageReference = new MessageReference(accountUuid, folderId, messageServerId, null);
+            notificationController.removeNewMailNotification(account, messageReference);
         }
 
         @Override

@@ -9,9 +9,14 @@
   <!--Used in the about dialog-->
   <string name="app_authors">فريق The K-9 Dog Walkers</string>
   <string name="app_copyright_fmt">حقوق النشر محفوظة 2008 - <xliff:g>%s</xliff:g> The K-9 Dog Walkers. جزء من حقوق النشر محفوظة 2006 - <xliff:g>%s</xliff:g> the Android Open Source Project.</string>
+  <string name="source_code">الكود المصدري</string>
   <string name="app_license">Apache License, Version 2.0</string>
+  <string name="about_project_title">مشروع مفتوح المصدر</string>
+  <string name="about_website_title">الموقع الإلكتروني</string>
   <string name="about_libraries">المكتبات</string>
   <string name="license">الرخصة</string>
+  <string name="changelog_title">سجل التغييرات</string>
+  <string name="changelog_recent_changes_title">مالجديد</string>
   <!--Welcome message-->
   <string name="welcome_message_title">أهلا بكم في بريد K-9</string>
   <string name="accounts_welcome"><![CDATA[
@@ -104,6 +109,7 @@
   <string name="add_account_action">أضف حسابًا</string>
   <string name="compose_action">أنشِئ</string>
   <string name="search_action">ابحث</string>
+  <string name="search_everywhere_action">البحث في كل مكان</string>
   <string name="search_results">نتائج البحث</string>
   <string name="preferences_action">الإعدادات</string>
   <string name="folders_action">إدارة المجلدات</string>
@@ -340,6 +346,7 @@
   <string name="account_setup_outgoing_smtp_server_label">خادم SMTP</string>
   <string name="account_setup_outgoing_port_label">المَنفذ</string>
   <string name="account_setup_outgoing_security_label">الأمان</string>
+  <string name="account_setup_outgoing_require_login_label">يتطلب تسجيل الدخول</string>
   <string name="account_setup_outgoing_username_label">اسم المُستخدم</string>
   <string name="account_setup_outgoing_password_label">كلمة السِّر</string>
   <string name="account_setup_outgoing_authentication_label">المصادقة</string>
@@ -354,7 +361,6 @@
   <string name="account_setup_options_mail_check_frequency_6hour">كل 6 ساعات</string>
   <string name="account_setup_options_mail_check_frequency_12hour">كل 12 ساعة</string>
   <string name="account_setup_options_mail_check_frequency_24hour">كل 24 ساعة</string>
-  <string name="idle_refresh_period_1min">كُل دقيقة</string>
   <string name="idle_refresh_period_2min">كل دقيقتين</string>
   <string name="idle_refresh_period_3min">كل 3 دقائق</string>
   <string name="idle_refresh_period_6min">كل 6 دقائق</string>
@@ -400,7 +406,6 @@
   <string name="account_notify_contacts_mail_only_summary">إظهار الإشعارات فقط عند تلقي رسائل مِن طرف مراسلين معروفين</string>
   <string name="account_settings_mark_message_as_read_on_view_label">تحديد الرسالة كمقروءة بعد فتحها</string>
   <string name="account_settings_mark_message_as_read_on_view_summary">تحديد الرسالة كمقروءة بعد فتحها الإطلاع عليها</string>
-  <string name="account_settings_notification_open_system_notifications_label">إعدادات الإشعار</string>
   <string name="account_settings_show_pictures_label">دائمًا اظهر الصور</string>
   <string name="account_settings_show_pictures_never">لا</string>
   <string name="account_settings_show_pictures_only_from_contacts">من المُتراسِلين</string>
@@ -435,6 +440,20 @@
   <string name="account_settings_color_none">مِن دون لون</string>
   <string name="account_settings_led_color_label">لون ضوء التنبيهات</string>
   <string name="account_settings_mail_display_count_label">حجم المجلد المحلي</string>
+  <string name="account_settings_autodownload_message_size_1">1 KiB</string>
+  <string name="account_settings_autodownload_message_size_2">2 KiB</string>
+  <string name="account_settings_autodownload_message_size_4">4 KiB</string>
+  <string name="account_settings_autodownload_message_size_8">8 KiB</string>
+  <string name="account_settings_autodownload_message_size_16">16 KiB</string>
+  <string name="account_settings_autodownload_message_size_32">32 KiB</string>
+  <string name="account_settings_autodownload_message_size_64">64 KiB</string>
+  <string name="account_settings_autodownload_message_size_128">128 KiB</string>
+  <string name="account_settings_autodownload_message_size_256">256 KiB</string>
+  <string name="account_settings_autodownload_message_size_512">512 KiB</string>
+  <string name="account_settings_autodownload_message_size_1024">1 MiB</string>
+  <string name="account_settings_autodownload_message_size_2048">2 MiB</string>
+  <string name="account_settings_autodownload_message_size_5120">5 MiB</string>
+  <string name="account_settings_autodownload_message_size_10240">10 MiB</string>
   <string name="account_settings_autodownload_message_size_any">أي حجم (بدون حَدْ)</string>
   <string name="account_settings_message_age_label">زَامن الرسائل مع</string>
   <string name="account_settings_message_age_any">أي وقت (بدون حَدْ)</string>
@@ -482,7 +501,6 @@
   <string name="folder_settings_folder_push_mode_normal">دون تصنيف</string>
   <string name="folder_settings_folder_push_mode_first_class">الفئة الأولى</string>
   <string name="folder_settings_folder_push_mode_second_class">الفئة الثانية</string>
-  <string name="folder_settings_folder_push_mode_inherited">مثل فئة التزامن</string>
   <string name="folder_settings_folder_notify_mode_label">فئة تنبيهات المجلد</string>
   <string name="folder_settings_folder_notify_mode_normal">دون تصنيف</string>
   <string name="folder_settings_folder_notify_mode_first_class">الفئة الأولى</string>
@@ -597,6 +615,7 @@
   <string name="account_setup_push_limit_1000">1000 مجلد</string>
   <string name="animations_title">الحركة</string>
   <string name="volume_navigation_title">التصفح عبر أزرار التحكم في الصوت</string>
+  <string name="search_title"><xliff:g id="search_name">%s</xliff:g> <xliff:g id="modifier">%s</xliff:g></string>
   <string name="unread_modifier"> - غير المقروءة</string>
   <string name="search_all_messages_title">كل الرسائل</string>
   <string name="integrated_inbox_title">البريد الوارد الموحَّد</string>
@@ -628,6 +647,7 @@
   <string name="font_size_message_view_date">الوقت والتاريخ</string>
   <string name="font_size_message_view_content">نصّ الرسالة</string>
   <string name="font_size_message_view_content_summary"><xliff:g id="fontsize">%d</xliff:g>%%</string>
+  <string name="font_size_message_view_content_dialog_title"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="font_size_message_compose">إنشاء الرسالة</string>
   <string name="font_size_message_compose_input">حقول إدخال النص</string>
   <string name="font_size_default">الإفتراضي</string>
@@ -668,6 +688,7 @@
   <string name="settings_export_success_generic">تمت عملية تصدير الإعدادات بنجاح</string>
   <string name="settings_export_failure">فشل تصدير الإعدادات</string>
   <string name="settings_import_title">استيراد الإعدادات</string>
+  <string name="settings_import_pick_document_button">اختيار ملف</string>
   <string name="settings_import_button">استيراد</string>
   <string name="settings_import_later_button">لاحقًا</string>
   <string name="settings_import">استيراد الإعدادات</string>
@@ -795,4 +816,5 @@
   <string name="navigation_drawer_open">افتح</string>
   <string name="navigation_drawer_close">اغلق</string>
   <!--permissions-->
+  <string name="push_info_learn_more_text">لمعرفة المزيد</string>
 </resources>

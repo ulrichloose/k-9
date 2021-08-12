@@ -379,7 +379,6 @@ Bonvolu raporti erarojn, kontribui novajn eblojn kaj peti pri novaj funkcioj per
   <string name="account_setup_options_enable_push_label">Aktivigi puŝ-retleteroj por tiu ĉi konto</string>
   <string name="account_setup_options_enable_push_summary">Se la servilo subtenas ĝin, novaj mesaĝoj aperos senprokraste. Tiu ĉi eblo povus signife plibonigi aŭ malbonigi rendimenton.</string>
   <string name="idle_refresh_period_label">Aktualigi IDLE-konekto</string>
-  <string name="idle_refresh_period_1min">Ĉiuminute</string>
   <string name="idle_refresh_period_2min">Je ĉiu 2 minutoj</string>
   <string name="idle_refresh_period_3min">Je ĉiu 3 minutoj</string>
   <string name="idle_refresh_period_6min">Je ĉiu 6 minutoj</string>
@@ -432,8 +431,6 @@ Bonvolu raporti erarojn, kontribui novajn eblojn kaj peti pri novaj funkcioj per
   <string name="account_settings_mark_message_as_read_on_view_summary">Markas mesaĝon kiel nelegitan, kiam ĝi estas malfermita por montri</string>
   <string name="account_settings_mark_message_as_read_on_delete_label">Marki kiel legitan je forigo</string>
   <string name="account_settings_mark_message_as_read_on_delete_summary">Markas mesaĝon kiel nelegitan, kiam ĝi estas forigata</string>
-  <string name="account_settings_notification_open_system_notifications_label">Agordoj de sciigoj</string>
-  <string name="account_settings_notification_open_system_notifications_summary">Malfermi sistemajn agordojn de sciigoj</string>
   <string name="account_settings_show_pictures_label">Ĉiam montri bildojn</string>
   <string name="account_settings_show_pictures_never">Ne</string>
   <string name="account_settings_show_pictures_only_from_contacts">De kontaktoj</string>
@@ -549,7 +546,6 @@ Bonvolu raporti erarojn, kontribui novajn eblojn kaj peti pri novaj funkcioj per
   <string name="folder_settings_folder_push_mode_normal">Neniu klaso</string>
   <string name="folder_settings_folder_push_mode_first_class">Klaso 1</string>
   <string name="folder_settings_folder_push_mode_second_class">Klaso 2</string>
-  <string name="folder_settings_folder_push_mode_inherited">Sama kiel samtempig-klaso</string>
   <string name="folder_settings_folder_notify_mode_label">Sciig-klaso de mesaĝujo</string>
   <string name="folder_settings_folder_notify_mode_normal">Neniu klaso</string>
   <string name="folder_settings_folder_notify_mode_first_class">Klaso 1</string>
@@ -1045,5 +1041,4 @@ Vi povas konservi tiun ĉi mesaĝon kaj uzi ĝin kiel sekurkopion de via privata
   <string name="permission_contacts_rationale_message">Por ebligi al K-9 sugesti kontaktojn kaj vidigi iliajn nomojn kaj fotojn, la aplikaĵo postulas aliron al viaj kontaktoj.</string>
   <string name="generic_loading_error">Eraro okazis dum enlegi datumojn</string>
   <string name="push_notification_state_initializing">Komencante ...</string>
-  <string name="push_notification_state_listening">Atendante novajn retpoŝtojn</string>
 </resources>

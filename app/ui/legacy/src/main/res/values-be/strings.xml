@@ -381,7 +381,6 @@ K-9 Mail - шматфункцыянальны свабодны паштовы к
   <string name="account_setup_options_enable_push_label">Уключыць push-апавяшчэнні для гэтага акаўнта</string>
   <string name="account_setup_options_enable_push_summary">Імгненнае апавяшчэнне пра новыя лісты, калі гэта падтрымліваецца серверам.</string>
   <string name="idle_refresh_period_label">Інтэрвал абнаўлення IDLE</string>
-  <string name="idle_refresh_period_1min">Штохвілінна</string>
   <string name="idle_refresh_period_2min">Кожныя 2 хвіліны</string>
   <string name="idle_refresh_period_3min">Кожныя 3 хвіліны</string>
   <string name="idle_refresh_period_6min">Кожныя 6 хвілін</string>
@@ -434,8 +433,6 @@ K-9 Mail - шматфункцыянальны свабодны паштовы к
   <string name="account_settings_mark_message_as_read_on_view_summary">Пазначаць ліст прачытаным пасля прагляду</string>
   <string name="account_settings_mark_message_as_read_on_delete_label">Пазначаць як прачытанае пры выдаленні</string>
   <string name="account_settings_mark_message_as_read_on_delete_summary">Пазначаць ліст як прачытаны пасля яго выдалення</string>
-  <string name="account_settings_notification_open_system_notifications_label">Налады апавяшчэнняў</string>
-  <string name="account_settings_notification_open_system_notifications_summary">Адкрыць сістэмныя налады апавяшчэнняў</string>
   <string name="account_settings_show_pictures_label">Заўсёды паказваць выявы</string>
   <string name="account_settings_show_pictures_never">Не</string>
   <string name="account_settings_show_pictures_only_from_contacts">Ад кантактаў</string>
@@ -551,7 +548,6 @@ K-9 Mail - шматфункцыянальны свабодны паштовы к
   <string name="folder_settings_folder_push_mode_normal">Без класа</string>
   <string name="folder_settings_folder_push_mode_first_class">1 клас</string>
   <string name="folder_settings_folder_push_mode_second_class">2 клас</string>
-  <string name="folder_settings_folder_push_mode_inherited">Як сінхранізацыі</string>
   <string name="folder_settings_folder_notify_mode_label">Апавяшчэнне пра каталог</string>
   <string name="folder_settings_folder_notify_mode_normal">Без класа</string>
   <string name="folder_settings_folder_notify_mode_first_class">1 клас</string>

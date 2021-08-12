@@ -331,7 +331,15 @@ class MessageListFragment :
             else -> ""
         }
 
-        fragmentListener.setMessageListTitle(title)
+        val subtitle = account.let { account ->
+            if (account == null || isUnifiedInbox || preferences.accounts.size == 1) {
+                null
+            } else {
+                account.description
+            }
+        }
+
+        fragmentListener.setMessageListTitle(title, subtitle)
     }
 
     fun progress(progress: Boolean) {
@@ -812,7 +820,7 @@ class MessageListFragment :
             }
 
             computeBatchDirection()
-            updateActionModeTitle()
+            updateActionMode()
             computeSelectAllVisibility()
         } else {
             this.selected.clear()
@@ -867,7 +875,7 @@ class MessageListFragment :
         }
 
         computeBatchDirection()
-        updateActionModeTitle()
+        updateActionMode()
         computeSelectAllVisibility()
 
         adapter.notifyDataSetChanged()
@@ -881,8 +889,10 @@ class MessageListFragment :
         setFlag(item, Flag.FLAGGED, !item.isStarred)
     }
 
-    private fun updateActionModeTitle() {
-        actionMode!!.title = getString(R.string.actionbar_selected, selectedCount)
+    private fun updateActionMode() {
+        val actionMode = actionMode ?: error("actionMode == null")
+        actionMode.title = getString(R.string.actionbar_selected, selectedCount)
+        actionMode.invalidate()
     }
 
     private fun computeSelectAllVisibility() {
@@ -1354,16 +1364,22 @@ class MessageListFragment :
     }
 
     val isOutbox: Boolean
-        get() {
-            val currentFolder = currentFolder ?: return false
-            return currentFolder.databaseId == account!!.outboxFolderId
-        }
+        get() = isSpecialFolder(account?.outboxFolderId)
 
     private val isInbox: Boolean
-        get() {
-            val currentFolder = currentFolder ?: return false
-            return currentFolder.databaseId == account!!.inboxFolderId
-        }
+        get() = isSpecialFolder(account?.inboxFolderId)
+
+    private val isArchiveFolder: Boolean
+        get() = isSpecialFolder(account?.archiveFolderId)
+
+    private val isSpamFolder: Boolean
+        get() = isSpecialFolder(account?.spamFolderId)
+
+    private fun isSpecialFolder(specialFolderId: Long?): Boolean {
+        val folderId = specialFolderId ?: return false
+        val currentFolder = currentFolder ?: return false
+        return currentFolder.databaseId == folderId
+    }
 
     val isRemoteFolder: Boolean
         get() {
@@ -1469,7 +1485,7 @@ class MessageListFragment :
         }
 
         recalculateSelectionCount()
-        updateActionModeTitle()
+        updateActionMode()
     }
 
     private fun startAndPrepareActionMode() {
@@ -1707,15 +1723,19 @@ class MessageListFragment :
 
             // we don't support cross account actions atm
             if (!isSingleAccountMode) {
-                // show all
+                val accounts = accountUuidsForSelected.mapNotNull { accountUuid ->
+                    preferences.getAccount(accountUuid)
+                }
+
                 menu.findItem(R.id.move).isVisible = true
-                menu.findItem(R.id.archive).isVisible = true
-                menu.findItem(R.id.spam).isVisible = true
                 menu.findItem(R.id.copy).isVisible = true
 
-                for (accountUuid in accountUuidsForSelected) {
-                    val account = preferences.getAccount(accountUuid)
-                    account?.let { setContextCapabilities(it, menu) }
+                // Disable archive/spam options here and maybe enable below when checking account capabilities
+                menu.findItem(R.id.archive).isVisible = false
+                menu.findItem(R.id.spam).isVisible = false
+
+                for (account in accounts) {
+                    setContextCapabilities(account, menu)
                 }
             }
 
@@ -1754,12 +1774,30 @@ class MessageListFragment :
                 menu.findItem(R.id.move).isVisible = false
                 menu.findItem(R.id.copy).isVisible = false
 
-                // TODO: we could support the archive and spam operations if all selected messages
-                // belong to non-POP3 accounts
+                if (account?.hasArchiveFolder() == true) {
+                    menu.findItem(R.id.archive).isVisible = true
+                }
+
+                if (account?.hasSpamFolder() == true) {
+                    menu.findItem(R.id.spam).isVisible = true
+                }
+            } else if (isOutbox) {
+                menu.findItem(R.id.mark_as_read).isVisible = false
+                menu.findItem(R.id.mark_as_unread).isVisible = false
                 menu.findItem(R.id.archive).isVisible = false
+                menu.findItem(R.id.copy).isVisible = false
+                menu.findItem(R.id.flag).isVisible = false
+                menu.findItem(R.id.unflag).isVisible = false
                 menu.findItem(R.id.spam).isVisible = false
+                menu.findItem(R.id.move).isVisible = false
+
+                disableMarkAsRead = true
+                disableFlag = true
+
+                if (account.hasDraftsFolder()) {
+                    menu.findItem(R.id.move_to_drafts).isVisible = true
+                }
             } else {
-                // hide unsupported
                 if (!messagingController.isCopyCapable(account)) {
                     menu.findItem(R.id.copy).isVisible = false
                 }
@@ -1768,33 +1806,13 @@ class MessageListFragment :
                     menu.findItem(R.id.move).isVisible = false
                     menu.findItem(R.id.archive).isVisible = false
                     menu.findItem(R.id.spam).isVisible = false
-                }
+                } else {
+                    if (!account.hasArchiveFolder() || isArchiveFolder) {
+                        menu.findItem(R.id.archive).isVisible = false
+                    }
 
-                val hideArchiveAction = isSingleFolderMode && currentFolder!!.databaseId == account.archiveFolderId
-                if (hideArchiveAction) {
-                    menu.findItem(R.id.archive).isVisible = false
-                }
-
-                val hideSpamAction = isSingleFolderMode && currentFolder!!.databaseId == account.spamFolderId
-                if (hideSpamAction) {
-                    menu.findItem(R.id.spam).isVisible = false
-                }
-
-                if (isOutbox) {
-                    menu.findItem(R.id.mark_as_read).isVisible = false
-                    menu.findItem(R.id.mark_as_unread).isVisible = false
-                    menu.findItem(R.id.archive).isVisible = false
-                    menu.findItem(R.id.copy).isVisible = false
-                    menu.findItem(R.id.flag).isVisible = false
-                    menu.findItem(R.id.unflag).isVisible = false
-                    menu.findItem(R.id.spam).isVisible = false
-                    menu.findItem(R.id.move).isVisible = false
-
-                    disableMarkAsRead = true
-                    disableFlag = true
-
-                    if (account.hasDraftsFolder()) {
-                        menu.findItem(R.id.move_to_drafts).isVisible = true
+                    if (!account.hasSpamFolder() || isSpamFolder) {
+                        menu.findItem(R.id.spam).isVisible = false
                     }
                 }
             }
@@ -1833,12 +1851,13 @@ class MessageListFragment :
                 R.id.unflag -> setFlagForSelected(Flag.FLAGGED, false)
                 R.id.select_all -> selectAll()
                 R.id.archive -> {
-                    // only if the account supports this
                     onArchive(checkedMessages)
+                    // TODO: Only finish action mode if all messages have been moved.
                     selectedCount = 0
                 }
                 R.id.spam -> {
                     onSpam(checkedMessages)
+                    // TODO: Only finish action mode if all messages have been moved.
                     selectedCount = 0
                 }
                 R.id.move -> {
@@ -1876,7 +1895,7 @@ class MessageListFragment :
         fun setMessageListProgress(level: Int)
         fun showThread(account: Account, threadRootId: Long)
         fun openMessage(messageReference: MessageReference)
-        fun setMessageListTitle(title: String)
+        fun setMessageListTitle(title: String, subtitle: String?)
         fun onCompose(account: Account?)
         fun startSearch(account: Account?, folderId: Long?): Boolean
         fun remoteSearchStarted()

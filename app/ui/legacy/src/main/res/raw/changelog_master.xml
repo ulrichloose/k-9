@@ -5,6 +5,60 @@
      Locale-specific versions are kept in res/raw-<locale qualifier>/changelog.xml.
 -->
 <changelog>
+    <release version="5.802" versioncode="28002" date="2021-08-04">
+        <change>Fixed a bug that was triggered when Push was enabled, but the server didn't support Push. If you've noticed high battery drain, this was probably it</change>
+        <change>Added support for archive and spam actions in the Unified Inbox</change>
+        <change>Fixed notification sounds/vibration. Sometimes notifications were audible when they shouldn't have been, sometimes the other way around</change>
+        <change>Display the star of starred messages in yellow</change>
+        <change>Don't show archive/spam action when no such folder is configured</change>
+        <change>Fixed a crash when saving a draft message with modified signature text</change>
+        <change>Fixed a crash when refreshing attachment previews</change>
+    </release>
+    <release version="5.801" versioncode="28001" date="2021-07-30">
+        <change>Tweaked the default font sizes</change>
+        <change>The name of the currently selected account is displayed in the top bar below the folder name (when using multiple accounts)</change>
+        <change>When selecting an account in the drawer the auto-expand folder is now displayed right away</change>
+        <change>Added support for user-installed CAs</change>
+        <change>Error notifications now contain the full error text</change>
+        <change>Fixed some crashes</change>
+        <change>Updated translations</change>
+    </release>
+    <release version="5.800" versioncode="28000" date="2021-07-24">
+        <change>Major redesign of the user interface</change>
+        <change>Changed periodic background sync and push implementations to work much more reliably</change>
+        <change>Deprecated support for the WebDAV protocol; new accounts can no longer be added</change>
+        <change>K-9 Mail now requires Android 5.0 and newer</change>
+        <change>Added support for Autocrypt setup message</change>
+        <change>Added support for encrypted subjects</change>
+        <change>Don't use default signature when setting up a new account</change>
+        <change>Allow installation on external media (Android 6+ with adopted storage)</change>
+        <change>Removed keyboard shortcuts for menu items; on some devices they conflicted with system shortcuts</change>
+        <change>Removed the broken option to store the message database on external storage</change>
+        <change>Removed the 'remote control' interface third-party apps could use to change some settings in K-9 Mail</change>
+        <change>A lot of other bug fixes, internal changes, and improvements</change>
+        <change>Check out the changelog entries for 5.7xx versions for a lot more details</change>
+    </release>
+    <release version="5.741" versioncode="27041" date="2021-07-22">
+        <change>Updated translations</change>
+    </release>
+    <release version="5.740" versioncode="27040" date="2021-07-16">
+        <change>Added an info screen when tapping the Push notification</change>
+        <change>Fixed a couple of crashes related to Push</change>
+        <change>Various small user interface fixes</change>
+        <change>Updated translations</change>
+    </release>
+    <release version="5.739" versioncode="27039" date="2021-07-10">
+        <change>Fixed bug that could prevent the device from going to sleep when Push was active</change>
+        <change>Fixed bug that lead to Push not being restarted when network connectivity returned</change>
+        <change>Fixed some issues with displaying the "What's new" notice</change>
+    </release>
+    <release version="5.738" versioncode="27038" date="2021-07-08">
+        <change>Inline attachments are now included in forwarded messages</change>
+        <change>Quick access to the "What's new" screen when the app was updated</change>
+        <change>Close and reopen Push connections when the active network has changed</change>
+        <change>Fixed a bug that lead to Push not working properly</change>
+        <change>Fixed some minor bugs</change>
+    </release>
     <release version="5.737" versioncode="27037" date="2021-06-26">
         <change>Fixed a bug in the network connectivity detection code for Push</change>
     </release>

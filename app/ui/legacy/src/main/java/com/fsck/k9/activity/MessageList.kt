@@ -618,13 +618,17 @@ open class MessageList :
         ManageFoldersActivity.launch(this, account!!)
     }
 
-    fun openRealAccount(account: Account) {
+    fun openRealAccount(account: Account): Boolean {
+        val shouldCloseDrawer = account.autoExpandFolderId != null
+
         val folderId = defaultFolderProvider.getDefaultFolder(account)
 
         val search = LocalSearch()
         search.addAllowedFolder(folderId)
         search.addAccountUuid(account.uuid)
         actionDisplaySearch(this, search, noThreading = false, newTask = false)
+
+        return shouldCloseDrawer
     }
 
     private fun performSearch(search: LocalSearch) {
@@ -1174,13 +1178,14 @@ open class MessageList :
         finish()
     }
 
-    fun setActionBarTitle(title: String) {
+    fun setActionBarTitle(title: String, subtitle: String? = null) {
         actionBar.title = title
+        actionBar.subtitle = subtitle
     }
 
-    override fun setMessageListTitle(title: String) {
+    override fun setMessageListTitle(title: String, subtitle: String?) {
         if (displayMode != DisplayMode.MESSAGE_VIEW) {
-            setActionBarTitle(title)
+            setActionBarTitle(title, subtitle)
         }
     }
 

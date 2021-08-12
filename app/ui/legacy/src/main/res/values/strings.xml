@@ -462,7 +462,6 @@ Please submit bug reports, contribute new features and ask questions at
     <string name="account_setup_options_enable_push_label">Enable push mail for this account</string>
     <string name="account_setup_options_enable_push_summary">If your server supports it, new messages will appear instantly. This option can dramatically improve or hurt performance.</string>
     <string name="idle_refresh_period_label">Refresh IDLE connection</string>
-    <string name="idle_refresh_period_1min">Every minute</string>
     <string name="idle_refresh_period_2min">Every 2 minutes</string>
     <string name="idle_refresh_period_3min">Every 3 minutes</string>
     <string name="idle_refresh_period_6min">Every 6 minutes</string>
@@ -522,8 +521,9 @@ Please submit bug reports, contribute new features and ask questions at
     <string name="account_settings_mark_message_as_read_on_view_summary">Mark a message as read when it is opened for viewing</string>
     <string name="account_settings_mark_message_as_read_on_delete_label">Mark as read when deleted</string>
     <string name="account_settings_mark_message_as_read_on_delete_summary">Mark a message as read when it is deleted</string>
-    <string name="account_settings_notification_open_system_notifications_label">Notification settings</string>
-    <string name="account_settings_notification_open_system_notifications_summary">Open system notification settings</string>
+    <string name="account_settings_notification_channels_label">Notification categories</string>
+    <string name="account_settings_open_notification_settings_messages_summary">Configure notifications for new messages</string>
+    <string name="account_settings_open_notification_settings_miscellaneous_summary">Configure error and status notifications</string>
 
     <string name="account_settings_show_pictures_label">Always show images</string>
     <string name="account_settings_show_pictures_never">No</string>
@@ -667,7 +667,7 @@ Please submit bug reports, contribute new features and ask questions at
     <string name="folder_settings_folder_push_mode_normal">No Class</string>
     <string name="folder_settings_folder_push_mode_first_class">1st Class</string>
     <string name="folder_settings_folder_push_mode_second_class">2nd Class</string>
-    <string name="folder_settings_folder_push_mode_inherited">Same as sync class</string>
+    <string name="folder_settings_folder_push_mode_inherited">Same as poll class</string>
 
     <string name="folder_settings_folder_notify_mode_label">Folder notification class</string>
     <string name="folder_settings_folder_notify_mode_normal">No Class</string>
@@ -1269,7 +1269,16 @@ You can keep this message and use it as a backup for your secret key. If you wan
     <string name="generic_loading_error">An error occurred while loading the data</string>
 
     <string name="push_notification_state_initializing">Initializing…</string>
-    <string name="push_notification_state_listening">Listening for new emails</string>
+    <string name="push_notification_state_listening">Waiting for new emails</string>
     <string name="push_notification_state_wait_background_sync">Sleeping until background sync is allowed</string>
     <string name="push_notification_state_wait_network">Sleeping until network is available</string>
+    <string name="push_notification_info">Tap to learn more.</string>
+
+    <string name="push_info_title">Push Info</string>
+    <string name="push_info_notification_explanation_text">When using Push, K-9 Mail maintains a connection to the mail server. Android requires displaying an ongoing notification while the app is active in the background. %s</string>
+    <string name="push_info_configure_notification_text">However, Android also allows you to hide the notification.</string>
+    <string name="push_info_learn_more_text">Learn more</string>
+    <string name="push_info_configure_notification_action">Configure notification</string>
+    <string name="push_info_disable_push_text">If you don\'t need instant notifications about new messages, you should disable Push and use Polling. Polling checks for new mail at regular intervals and does not need the notification.</string>
+    <string name="push_info_disable_push_action">Disable Push</string>
 </resources>
