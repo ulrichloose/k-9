@@ -64,6 +64,7 @@ import com.fsck.k9.mail.MessageDownloadState;
 import com.fsck.k9.mail.MessageRetrievalListener;
 import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.Part;
+import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.mailstore.LocalFolder;
 import com.fsck.k9.mailstore.LocalMessage;
 import com.fsck.k9.mailstore.LocalStore;
@@ -125,7 +126,7 @@ public class MessagingController {
     private final Set<MessagingListener> listeners = new CopyOnWriteArraySet<>();
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
     private final MemorizingMessagingListener memorizingMessagingListener = new MemorizingMessagingListener();
-    private final UnreadMessageCountProvider unreadMessageCountProvider;
+    private final MessageCountsProvider messageCountsProvider;
     private final DraftOperations draftOperations;
 
 
@@ -140,14 +141,14 @@ public class MessagingController {
 
     MessagingController(Context context, NotificationController notificationController,
             NotificationStrategy notificationStrategy, LocalStoreProvider localStoreProvider,
-            UnreadMessageCountProvider unreadMessageCountProvider, BackendManager backendManager,
+            MessageCountsProvider messageCountsProvider, BackendManager backendManager,
             Preferences preferences, MessageStoreManager messageStoreManager,
             SaveMessageDataCreator saveMessageDataCreator, List<ControllerExtension> controllerExtensions) {
         this.context = context;
         this.notificationController = notificationController;
         this.notificationStrategy = notificationStrategy;
         this.localStoreProvider = localStoreProvider;
-        this.unreadMessageCountProvider = unreadMessageCountProvider;
+        this.messageCountsProvider = messageCountsProvider;
         this.backendManager = backendManager;
         this.preferences = preferences;
         this.messageStoreManager = messageStoreManager;
@@ -390,6 +391,12 @@ public class MessagingController {
 
     public void refreshFolderListSynchronous(Account account) {
         try {
+            ServerSettings serverSettings = account.getIncomingServerSettings();
+            if (serverSettings.password == null) {
+                handleAuthenticationFailure(account, true);
+                return;
+            }
+
             Backend backend = getBackend(account);
             backend.refreshFolderList();
 
@@ -643,6 +650,12 @@ public class MessagingController {
     }
 
     private void syncFolder(Account account, long folderId, MessagingListener listener, Backend backend) {
+        ServerSettings serverSettings = account.getIncomingServerSettings();
+        if (serverSettings.password == null) {
+            handleAuthenticationFailure(account, true);
+            return;
+        }
+
         Exception commandException = null;
         try {
             processPendingCommandsSynchronous(account);
@@ -1498,6 +1511,12 @@ public class MessagingController {
         Exception lastFailure = null;
         boolean wasPermanentFailure = false;
         try {
+            ServerSettings serverSettings = account.getOutgoingServerSettings();
+            if (serverSettings.password == null) {
+                handleAuthenticationFailure(account, false);
+                return;
+            }
+
             LocalStore localStore = localStoreProvider.getInstance(account);
             OutboxStateRepository outboxStateRepository = localStore.getOutboxStateRepository();
             LocalFolder localFolder = localStore.getFolder(account.getOutboxFolderId());
@@ -1676,11 +1695,13 @@ public class MessagingController {
     }
 
     public int getUnreadMessageCount(Account account) {
-        return unreadMessageCountProvider.getUnreadMessageCount(account);
+        MessageCounts messageCounts = messageCountsProvider.getMessageCounts(account);
+        return messageCounts.getUnread();
     }
 
     public int getUnreadMessageCount(SearchAccount searchAccount) {
-        return unreadMessageCountProvider.getUnreadMessageCount(searchAccount);
+        MessageCounts messageCounts = messageCountsProvider.getMessageCounts(searchAccount);
+        return messageCounts.getUnread();
     }
 
     public int getFolderUnreadMessageCount(Account account, Long folderId) throws MessagingException {

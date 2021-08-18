@@ -14,11 +14,14 @@ import com.fsck.k9.K9RobolectricTest;
 import com.fsck.k9.Preferences;
 import com.fsck.k9.backend.BackendManager;
 import com.fsck.k9.backend.api.Backend;
+import com.fsck.k9.mail.AuthType;
 import com.fsck.k9.mail.AuthenticationFailedException;
 import com.fsck.k9.mail.CertificateValidationException;
+import com.fsck.k9.mail.ConnectionSecurity;
 import com.fsck.k9.mail.Flag;
 import com.fsck.k9.mail.MessageRetrievalListener;
 import com.fsck.k9.mail.MessagingException;
+import com.fsck.k9.mail.ServerSettings;
 import com.fsck.k9.mailstore.LocalFolder;
 import com.fsck.k9.mailstore.LocalMessage;
 import com.fsck.k9.mailstore.LocalStore;
@@ -31,6 +34,7 @@ import com.fsck.k9.mailstore.SendState;
 import com.fsck.k9.mailstore.UnavailableStorageException;
 import com.fsck.k9.notification.NotificationController;
 import com.fsck.k9.notification.NotificationStrategy;
+import com.fsck.k9.preferences.Protocols;
 import com.fsck.k9.search.LocalSearch;
 import com.fsck.k9.search.SearchAccount;
 import org.jetbrains.annotations.NotNull;
@@ -110,15 +114,15 @@ public class MessagingControllerTest extends K9RobolectricTest {
     private LocalMessage localMessageToSend1;
     private volatile boolean hasFetchedMessage = false;
 
-    private UnreadMessageCountProvider unreadMessageCountProvider = new UnreadMessageCountProvider() {
+    private MessageCountsProvider messageCountsProvider = new MessageCountsProvider() {
         @Override
-        public int getUnreadMessageCount(@NotNull SearchAccount searchAccount) {
-            return 0;
+        public MessageCounts getMessageCounts(@NotNull SearchAccount searchAccount) {
+            return new MessageCounts(0, 0);
         }
 
         @Override
-        public int getUnreadMessageCount(@NotNull Account account) {
-            return 0;
+        public MessageCounts getMessageCounts(@NotNull Account account) {
+            return new MessageCounts(0, 0);
         }
     };
 
@@ -135,7 +139,7 @@ public class MessagingControllerTest extends K9RobolectricTest {
         preferences = Preferences.getPreferences(appContext);
 
         controller = new MessagingController(appContext, notificationController, notificationStrategy,
-                localStoreProvider, unreadMessageCountProvider, backendManager, preferences, messageStoreManager,
+                localStoreProvider, messageCountsProvider, backendManager, preferences, messageStoreManager,
                 saveMessageDataCreator, Collections.<ControllerExtension>emptyList());
 
         configureAccount();
@@ -441,6 +445,10 @@ public class MessagingControllerTest extends K9RobolectricTest {
         account = preferences.newAccount();
         accountUuid = account.getUuid();
 
+        account.setIncomingServerSettings(new ServerSettings(Protocols.IMAP, "host", 993,
+                ConnectionSecurity.SSL_TLS_REQUIRED, AuthType.PLAIN, "username", "password", null));
+        account.setOutgoingServerSettings(new ServerSettings(Protocols.SMTP, "host", 465,
+                ConnectionSecurity.SSL_TLS_REQUIRED, AuthType.PLAIN, "username", "password", null));
         account.setMaximumAutoDownloadMessageSize(MAXIMUM_SMALL_MESSAGE_SIZE);
         account.setEmail("user@host.com");
     }
