@@ -5,7 +5,7 @@ buildscript {
         buildConfig = [
                 'compileSdk': 30,
                 'targetSdk': 30,
-                'minSdk': 21,
+                'minSdk': 26,
                 'buildTools': '30.0.3',
                 'robolectricSdk': 30
         ]
@@ -49,8 +49,8 @@ buildscript {
                 'ktlint': '0.40.0'
         ]
 
-        javaVersion = JavaVersion.VERSION_1_8
-        kotlinJvmVersion = "1.8"
+        javaVersion = JavaVersion.VERSION_11
+        kotlinJvmVersion = "11"
     }
 
     repositories {
@@ -61,7 +61,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:7.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:10.0.0"
     }
