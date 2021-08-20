@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:layout_margin="16dp"
             android:contentDescription="@null"
-            app:srcCompat="@mipmap/icon" />
+            app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
             android:layout_width="match_parent"

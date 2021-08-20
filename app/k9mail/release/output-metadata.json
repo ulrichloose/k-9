@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.fsck.k9",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 29000,
+      "versionName": "5.900-SNAPSHOT",
+      "outputFile": "k9mail-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
