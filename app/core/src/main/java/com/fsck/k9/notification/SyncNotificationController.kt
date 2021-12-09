@@ -1,5 +1,6 @@
 package com.fsck.k9.notification
 
+import android.app.Notification
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.fsck.k9.Account
@@ -26,13 +27,14 @@ internal class SyncNotificationController(
         val notificationBuilder = notificationHelper
             .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
             .setSmallIcon(resourceProvider.iconSendingMail)
+            .setColor(account.chipColor)
             .setWhen(System.currentTimeMillis())
             .setOngoing(true)
             .setTicker(tickerText)
             .setContentTitle(title)
             .setContentText(accountName)
             .setContentIntent(showMessageListPendingIntent)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPublicVersion(createSendingLockScreenNotification(account))
 
         if (NOTIFICATION_LED_WHILE_SYNCING) {
             notificationHelper.configureNotification(
@@ -71,13 +73,14 @@ internal class SyncNotificationController(
         val notificationBuilder = notificationHelper
             .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
             .setSmallIcon(resourceProvider.iconCheckingMail)
+            .setColor(account.chipColor)
             .setWhen(System.currentTimeMillis())
             .setOngoing(true)
             .setTicker(tickerText)
             .setContentTitle(title)
             .setContentText(text)
             .setContentIntent(showMessageListPendingIntent)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPublicVersion(createFetchingMailLockScreenNotification(account))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
 
         if (NOTIFICATION_LED_WHILE_SYNCING) {
@@ -102,11 +105,12 @@ internal class SyncNotificationController(
         val notificationBuilder = notificationHelper
             .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
             .setSmallIcon(resourceProvider.iconCheckingMail)
+            .setColor(account.chipColor)
             .setWhen(System.currentTimeMillis())
             .setOngoing(true)
             .setContentTitle(title)
             .setContentText(text)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPublicVersion(createFetchingMailLockScreenNotification(account))
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
 
         if (NOTIFICATION_LED_WHILE_SYNCING) {
@@ -126,6 +130,26 @@ internal class SyncNotificationController(
     fun clearFetchingMailNotification(account: Account) {
         val notificationId = NotificationIds.getFetchingMailNotificationId(account)
         notificationManager.cancel(notificationId)
+    }
+
+    private fun createSendingLockScreenNotification(account: Account): Notification {
+        return notificationHelper
+            .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
+            .setSmallIcon(resourceProvider.iconSendingMail)
+            .setColor(account.chipColor)
+            .setWhen(System.currentTimeMillis())
+            .setContentTitle(resourceProvider.sendingMailTitle())
+            .build()
+    }
+
+    private fun createFetchingMailLockScreenNotification(account: Account): Notification {
+        return notificationHelper
+            .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
+            .setSmallIcon(resourceProvider.iconCheckingMail)
+            .setColor(account.chipColor)
+            .setWhen(System.currentTimeMillis())
+            .setContentTitle(resourceProvider.checkingMailTitle())
+            .build()
     }
 
     private val notificationManager: NotificationManagerCompat

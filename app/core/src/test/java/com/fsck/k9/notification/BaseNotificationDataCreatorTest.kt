@@ -123,7 +123,7 @@ class BaseNotificationDataCreatorTest {
 
         assertThat(result.lockScreenNotificationData).isInstanceOf(LockScreenNotificationData.SenderNames::class.java)
         val senderNamesData = result.lockScreenNotificationData as LockScreenNotificationData.SenderNames
-        assertThat(senderNamesData.senderNames).isEqualTo("Sender Three, Sender Two, Sender One")
+        assertThat(senderNamesData.senderNames).isEqualTo("Sender One, Sender Two, Sender Three")
     }
 
     @Test
@@ -148,6 +148,7 @@ class BaseNotificationDataCreatorTest {
 
     @Test
     fun `vibration pattern`() {
+        account.notificationSetting.isVibrateEnabled = true
         account.notificationSetting.vibratePattern = 3
         account.notificationSetting.vibrateTimes = 2
         val notificationData = createNotificationData()
@@ -172,27 +173,26 @@ class BaseNotificationDataCreatorTest {
     }
 
     private fun createNotificationData(senders: List<String> = emptyList()): NotificationData {
-        val notificationData = NotificationData(account)
-        for (sender in senders) {
-            notificationData.addNotificationContent(
-                NotificationContent(
+        val activeNotifications = senders.mapIndexed { index, sender ->
+            NotificationHolder(
+                notificationId = index,
+                timestamp = 0L,
+                content = NotificationContent(
                     messageReference = mock(),
                     sender = sender,
                     preview = "irrelevant",
                     summary = "irrelevant",
                     subject = "irrelevant"
-                ),
-                timestamp = 0L
+                )
             )
         }
-        return notificationData
+        return NotificationData(account, activeNotifications, inactiveNotifications = emptyList())
     }
 
     private fun createAccount(): Account {
         return Account("00000000-0000-4000-0000-000000000000").apply {
             description = "account name"
             identities = listOf(Identity())
-            notificationSetting.vibrateTimes = 1
         }
     }
 }

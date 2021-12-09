@@ -10,89 +10,99 @@ import com.fsck.k9.mailstore.LocalMessage
  */
 internal class NewMailNotificationManager(
     private val contentCreator: NotificationContentCreator,
+    private val notificationRepository: NotificationRepository,
     private val baseNotificationDataCreator: BaseNotificationDataCreator,
     private val singleMessageNotificationDataCreator: SingleMessageNotificationDataCreator,
     private val summaryNotificationDataCreator: SummaryNotificationDataCreator,
     private val clock: Clock
 ) {
-    private val notifications = mutableMapOf<Int, NotificationData>()
-    private val lock = Any()
+    fun restoreNewMailNotifications(account: Account): NewMailNotificationData? {
+        val notificationData = notificationRepository.restoreNotifications(account) ?: return null
+
+        val addLockScreenNotification = notificationData.isSingleMessageNotification
+        val singleNotificationDataList = notificationData.activeNotifications.map { notificationHolder ->
+            createSingleNotificationData(
+                account = account,
+                notificationId = notificationHolder.notificationId,
+                content = notificationHolder.content,
+                timestamp = notificationHolder.timestamp,
+                addLockScreenNotification = addLockScreenNotification
+            )
+        }
+
+        return NewMailNotificationData(
+            cancelNotificationIds = emptyList(),
+            baseNotificationData = createBaseNotificationData(notificationData),
+            singleNotificationData = singleNotificationDataList,
+            summaryNotificationData = createSummaryNotificationData(notificationData, silent = true)
+        )
+    }
 
     fun addNewMailNotification(account: Account, message: LocalMessage, silent: Boolean): NewMailNotificationData {
         val content = contentCreator.createFromMessage(account, message)
 
-        synchronized(lock) {
-            val notificationData = getOrCreateNotificationData(account)
-            val result = notificationData.addNotificationContent(content, timestamp = now())
+        val result = notificationRepository.addNotification(account, content, timestamp = now())
 
-            val singleNotificationData = createSingleNotificationData(
-                account = account,
-                notificationId = result.notificationHolder.notificationId,
-                content = result.notificationHolder.content,
-                timestamp = result.notificationHolder.timestamp,
-                addLockScreenNotification = notificationData.isSingleMessageNotification
-            )
+        val singleNotificationData = createSingleNotificationData(
+            account = account,
+            notificationId = result.notificationHolder.notificationId,
+            content = result.notificationHolder.content,
+            timestamp = result.notificationHolder.timestamp,
+            addLockScreenNotification = result.notificationData.isSingleMessageNotification
+        )
 
-            return NewMailNotificationData(
-                cancelNotificationIds = if (result.shouldCancelNotification) {
-                    listOf(result.notificationId)
-                } else {
-                    emptyList()
-                },
-                baseNotificationData = createBaseNotificationData(notificationData),
-                singleNotificationData = listOf(singleNotificationData),
-                summaryNotificationData = createSummaryNotificationData(notificationData, silent)
-            )
-        }
+        return NewMailNotificationData(
+            cancelNotificationIds = if (result.shouldCancelNotification) {
+                listOf(result.cancelNotificationId)
+            } else {
+                emptyList()
+            },
+            baseNotificationData = createBaseNotificationData(result.notificationData),
+            singleNotificationData = listOf(singleNotificationData),
+            summaryNotificationData = createSummaryNotificationData(result.notificationData, silent)
+        )
     }
 
     fun removeNewMailNotification(account: Account, messageReference: MessageReference): NewMailNotificationData? {
-        synchronized(lock) {
-            val notificationData = getNotificationData(account) ?: return null
+        val result = notificationRepository.removeNotification(account, messageReference) ?: return null
 
-            val result = notificationData.removeNotificationForMessage(messageReference)
-            if (result.isUnknownNotification) return null
-
-            if (notificationData.newMessagesCount == 0) {
-                return NewMailNotificationData(
-                    cancelNotificationIds = listOf(
-                        NotificationIds.getNewMailSummaryNotificationId(account),
-                        result.notificationId
-                    ),
-                    baseNotificationData = createBaseNotificationData(notificationData),
-                    singleNotificationData = emptyList(),
-                    summaryNotificationData = null
-                )
+        val cancelNotificationIds = when {
+            result.shouldCancelNotification && result.notificationData.isEmpty() -> {
+                listOf(NotificationIds.getNewMailSummaryNotificationId(account), result.cancelNotificationId)
             }
+            result.shouldCancelNotification -> {
+                listOf(result.cancelNotificationId)
+            }
+            else -> {
+                emptyList()
+            }
+        }
 
-            val singleNotificationData = if (result.shouldCreateNotification) {
-                val singleNotificationData = createSingleNotificationData(
+        val singleNotificationDataList = if (result.shouldCreateNotification) {
+            listOf(
+                createSingleNotificationData(
                     account = account,
                     notificationId = result.notificationHolder.notificationId,
                     content = result.notificationHolder.content,
                     timestamp = result.notificationHolder.timestamp,
-                    addLockScreenNotification = notificationData.isSingleMessageNotification
+                    addLockScreenNotification = result.notificationData.isSingleMessageNotification
                 )
-                listOf(singleNotificationData)
-            } else {
-                emptyList()
-            }
-
-            return NewMailNotificationData(
-                cancelNotificationIds = listOf(result.notificationId),
-                baseNotificationData = createBaseNotificationData(notificationData),
-                singleNotificationData = singleNotificationData,
-                summaryNotificationData = createSummaryNotificationData(notificationData, silent = true)
             )
+        } else {
+            emptyList()
         }
+
+        return NewMailNotificationData(
+            cancelNotificationIds = cancelNotificationIds,
+            baseNotificationData = createBaseNotificationData(result.notificationData),
+            singleNotificationData = singleNotificationDataList,
+            summaryNotificationData = createSummaryNotificationData(result.notificationData, silent = true)
+        )
     }
 
     fun clearNewMailNotifications(account: Account): List<Int> {
-        synchronized(lock) {
-            val notificationData = removeNotificationData(account) ?: return emptyList()
-            return notificationData.getActiveNotificationIds() +
-                NotificationIds.getNewMailSummaryNotificationId(account)
-        }
+        notificationRepository.clearNotifications(account)
+        return NotificationIds.getAllMessageNotificationIds(account)
     }
 
     private fun createBaseNotificationData(notificationData: NotificationData): BaseNotificationData {
@@ -115,31 +125,12 @@ internal class NewMailNotificationManager(
         )
     }
 
-    private fun createSummaryNotificationData(data: NotificationData, silent: Boolean): SummaryNotificationData {
-        return summaryNotificationDataCreator.createSummaryNotificationData(data, silent)
-    }
-
-    private fun getOrCreateNotificationData(account: Account): NotificationData {
-        val notificationData = getNotificationData(account)
-        if (notificationData != null) return notificationData
-
-        val accountNumber = account.accountNumber
-        val newNotificationHolder = NotificationData(account)
-        notifications[accountNumber] = newNotificationHolder
-
-        return newNotificationHolder
-    }
-
-    private fun getNotificationData(account: Account): NotificationData? {
-        val accountNumber = account.accountNumber
-        return notifications[accountNumber]
-    }
-
-    private fun removeNotificationData(account: Account): NotificationData? {
-        val accountNumber = account.accountNumber
-        val notificationData = notifications[accountNumber]
-        notifications.remove(accountNumber)
-        return notificationData
+    private fun createSummaryNotificationData(data: NotificationData, silent: Boolean): SummaryNotificationData? {
+        return if (data.isEmpty()) {
+            null
+        } else {
+            summaryNotificationDataCreator.createSummaryNotificationData(data, silent)
+        }
     }
 
     private fun now(): Long = clock.time
