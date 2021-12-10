@@ -1,5 +1,6 @@
 package com.fsck.k9.notification
 
+import android.app.Notification
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.fsck.k9.Account
@@ -22,6 +23,7 @@ internal class SendFailedNotificationController(
         val notificationBuilder = notificationHelper
             .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
             .setSmallIcon(resourceProvider.iconWarning)
+            .setColor(account.chipColor)
             .setWhen(System.currentTimeMillis())
             .setAutoCancel(true)
             .setTicker(title)
@@ -29,7 +31,7 @@ internal class SendFailedNotificationController(
             .setContentText(text)
             .setContentIntent(folderListPendingIntent)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPublicVersion(createLockScreenNotification(account))
             .setCategory(NotificationCompat.CATEGORY_ERROR)
 
         notificationHelper.configureNotification(
@@ -47,6 +49,16 @@ internal class SendFailedNotificationController(
     fun clearSendFailedNotification(account: Account) {
         val notificationId = NotificationIds.getSendFailedNotificationId(account)
         notificationManager.cancel(notificationId)
+    }
+
+    private fun createLockScreenNotification(account: Account): Notification {
+        return notificationHelper
+            .createNotificationBuilder(account, NotificationChannelManager.ChannelType.MISCELLANEOUS)
+            .setSmallIcon(resourceProvider.iconWarning)
+            .setColor(account.chipColor)
+            .setWhen(System.currentTimeMillis())
+            .setContentTitle(resourceProvider.sendFailedTitle())
+            .build()
     }
 
     private val notificationManager: NotificationManagerCompat
