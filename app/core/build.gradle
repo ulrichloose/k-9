@@ -5,6 +5,7 @@ apply plugin: 'org.jetbrains.kotlin.plugin.parcelize'
 dependencies {
     api project(":mail:common")
     api project(":backend:api")
+    api project(":app:html-cleaner")
 
     implementation project(':plugins:openpgp-api-lib:openpgp-api')
 
