@@ -33,12 +33,15 @@ public class LauncherShortcuts extends AccountList {
 
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        String description = account.getDescription();
-        if (description == null || description.isEmpty()) {
-            description = account.getEmail();
+        String accountName = account.getName();
+        String displayName;
+        if (accountName != null) {
+            displayName = accountName;
+        } else {
+            displayName = account.getEmail();
         }
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, description);
-        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, displayName);
+        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.mipmap.icon);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         setResult(RESULT_OK, intent);

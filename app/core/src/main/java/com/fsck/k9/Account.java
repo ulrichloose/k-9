@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import com.fsck.k9.backend.api.SyncConfig.ExpungePolicy;
 import com.fsck.k9.mail.Address;
 import com.fsck.k9.mail.NetworkType;
@@ -107,7 +108,7 @@ public class Account implements BaseAccount {
      * storage
      */
     private String localStorageProviderId;
-    private String description;
+    private String name;
     private String alwaysBcc;
     private int automaticCheckIntervalMinutes;
     private int displayCount;
@@ -254,23 +255,27 @@ public class Account implements BaseAccount {
     }
 
     @Override
-    public synchronized String getDescription() {
-        return description;
-    }
-
-    public synchronized void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDisplayName() {
-        return description != null ? description : getEmail();
-    }
-
     public synchronized String getName() {
-        return identities.get(0).getName();
+        return name;
     }
 
     public synchronized void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            this.name = null;
+        } else {
+            this.name = name;
+        }
+    }
+
+    public String getDisplayName() {
+        return name != null ? name : getEmail();
+    }
+
+    public synchronized String getSenderName() {
+        return identities.get(0).getName();
+    }
+
+    public synchronized void setSenderName(String name) {
         Identity newIdentity = identities.get(0).withName(name);
         identities.set(0, newIdentity);
     }
@@ -704,9 +709,14 @@ public class Account implements BaseAccount {
         return oldMaxPushFolders != maxPushFolders;
     }
 
+    @NonNull
     @Override
     public synchronized String toString() {
-        return description;
+        if (K9.isSensitiveDebugLoggingEnabled()) {
+            return getDisplayName();
+        } else {
+            return accountUuid;
+        }
     }
 
     public synchronized void setCompression(NetworkType networkType, boolean useCompression) {
